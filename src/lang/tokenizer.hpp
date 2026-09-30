@@ -18,6 +18,8 @@ enum class TokenKind {
     Semicolon
 };
 
+std::string token_name(TokenKind kind);
+
 class Token {
 public:
     Token(TokenKind kind, std::string value, Span span);
@@ -29,7 +31,6 @@ public:
     Span span;
 
     std::string repr() const;
-    std::string name() const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Token& token);

@@ -1,3 +1,5 @@
+#include "lang/ast.hpp"
+#include "lang/parser.hpp"
 #include "util/diagnostic.hpp"
 #include <sstream>
 #include <util/error.hpp>
@@ -37,13 +39,18 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::cout << "[";
+    Parser parser(tokens, std::string(argv[1]));
 
-    for (auto token : tokens) {
-        std::cout << token << ",";
+    AST::Program* prog;
+
+    try {
+        prog = parser.parse();
+    } catch (const ParserError& e) {
+        error() << render(source, e.span, e.what(), argv[1]);
+        return 1;
     }
 
-    std::cout << "]" << std::endl;
+    std::cout << prog->repr();
 
     return 0;
 }

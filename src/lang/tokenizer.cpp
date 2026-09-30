@@ -133,7 +133,7 @@ std::string Token::repr() const {
     }
 }
 
-std::string Token::name() const {
+std::string token_name(TokenKind kind) {
     switch (kind) {
         case TokenKind::Identifier:
             return "identifer";
