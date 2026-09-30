@@ -1,3 +1,4 @@
+#include "util/diagnostic.hpp"
 #include <sstream>
 #include <util/error.hpp>
 #include <lang/tokenizer.hpp>
@@ -23,9 +24,18 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    Tokenizer tokenizer(buf.str());
+    std::string source = buf.str();
 
-    auto tokens = tokenizer.tokenize();
+    Tokenizer tokenizer(source);
+
+    std::vector<Token> tokens;
+
+    try {
+        tokens = tokenizer.tokenize();
+    } catch (const TokenizerError& e) {
+        error() << render(source, e.span, e.what(), argv[1]);
+        return 1;
+    }
 
     std::cout << "[";
 
