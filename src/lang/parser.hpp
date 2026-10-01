@@ -43,10 +43,10 @@ private:
     AST::Program* parse_program();
     AST::Function* parse_function();
     AST::Type* parse_type();
-    std::vector<AST::ASTNode*> parse_block();
-    AST::ASTNode* parse_statement();
+    std::vector<AST::Node*> parse_block();
+    AST::Node* parse_statement();
     AST::Return* parse_return();
-    AST::ASTNode* parse_expression();
+    AST::Node* parse_expression();
 
     Span eof_span();
     Span prev_span();

@@ -1,6 +1,7 @@
 #include "parser.hpp"
 #include "lang/ast.hpp"
 #include "lang/tokenizer.hpp"
+#include <cstddef>
 #include <format>
 
 ParserError::ParserError(std::string message, const Token& token, Span span) : message(message), token(token),
@@ -50,7 +51,7 @@ const Token& Parser::expect(TokenKind kind, std::string_view value, std::string_
 
     if (!matches) {
         std::string expected;
-        if (value.empty())
+        if (!value.empty())
             expected = std::format("`{}`", value);
         else
             expected = token_name(kind);
@@ -124,6 +125,9 @@ AST::Function* Parser::parse_function() {
     func->body = parse_block();
     func->span = start.to(prev_span());
 
+    if (func->return_type == nullptr)
+        func->return_type = new AST::Type(Span(0, 0), "void");
+
     return func;
 }
 
@@ -133,8 +137,8 @@ AST::Type* Parser::parse_type() {
     return new AST::Type(type.span, type.value);
 }
 
-std::vector<AST::ASTNode*> Parser::parse_block() {
-    std::vector<AST::ASTNode*> block;
+std::vector<AST::Node*> Parser::parse_block() {
+    std::vector<AST::Node*> block;
 
     expect(TokenKind::LBracket, "", "expected block");
 
@@ -152,7 +156,7 @@ std::vector<AST::ASTNode*> Parser::parse_block() {
     return block;
 }
 
-AST::ASTNode* Parser::parse_statement() {
+AST::Node* Parser::parse_statement() {
     const Token& token = peek();
 
     switch (token.kind) {
@@ -170,14 +174,14 @@ AST::ASTNode* Parser::parse_statement() {
 AST::Return* Parser::parse_return() {
     Span start = expect(TokenKind::Keyword, "return").span;
 
-    AST::ASTNode* value = parse_expression();
+    AST::Node* value = parse_expression();
 
     expect(TokenKind::Semicolon);
 
     return new AST::Return(start.to(value->span), value);
 }
 
-AST::ASTNode* Parser::parse_expression() {
+AST::Node* Parser::parse_expression() {
     const Token& value = expect(TokenKind::Number);
     return new AST::NumberLiteral(value.span, std::stoi(value.value));
 }

@@ -1,9 +1,11 @@
 #include "lang/ast.hpp"
 #include "lang/parser.hpp"
+#include "lang/semantic.hpp"
 #include "util/diagnostic.hpp"
 #include <sstream>
 #include <util/error.hpp>
 #include <lang/tokenizer.hpp>
+#include <lang/semantic.hpp>
 #include <fstream>
 
 int main(int argc, char* argv[]) {
@@ -47,6 +49,17 @@ int main(int argc, char* argv[]) {
         prog = parser.parse();
     } catch (const ParserError& e) {
         error() << render(source, e.span, e.what(), argv[1]);
+        return 1;
+    }
+
+    Analyzer anal(prog);
+
+    auto errors = anal.analyze();
+
+    if (!errors.empty()) {
+        for (auto e : errors) {
+            error() << render(source, e.span, std::string(e.message), argv[1]);
+        }
         return 1;
     }
 

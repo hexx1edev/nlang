@@ -6,7 +6,7 @@
 
 namespace AST {
 
-enum class ASTNodeKind {
+enum class NodeKind {
     Program,
     Type,
     Function,
@@ -15,72 +15,72 @@ enum class ASTNodeKind {
     Identifier
 };
 
-struct ASTNode {
+struct Node {
     Span span;
-    ASTNodeKind kind;
+    NodeKind kind;
 
-    ASTNode(Span span, ASTNodeKind kind)
+    Node(Span span, NodeKind kind)
         : span(span), kind(kind) {}
 
-    virtual ~ASTNode() = default;
+    virtual ~Node() = default;
     virtual std::string repr() const = 0;
 };
 
-struct Type : public ASTNode {
+struct Type : public Node {
     std::string type;
 
     Type(Span span, std::string type)
-        : ASTNode(span, ASTNodeKind::Type),
+        : Node(span, NodeKind::Type),
             type(std::move(type)) {}
 
     std::string repr() const override;
 };
 
-struct Function : public ASTNode {
+struct Function : public Node {
     std::string name;
     Type* return_type;
-    std::vector<ASTNode*> body;
+    std::vector<Node*> body;
 
-    Function(Span span, std::string name, Type* return_type, std::vector<ASTNode*> body)
-        : ASTNode(span, ASTNodeKind::Function), name(std::move(name)), return_type(return_type),
+    Function(Span span, std::string name, Type* return_type, std::vector<Node*> body)
+        : Node(span, NodeKind::Function), name(std::move(name)), return_type(return_type),
             body(std::move(body)) {}
 
     std::string repr() const override;
 };
 
-struct Program : public ASTNode {
+struct Program : public Node {
     std::string name;
     std::vector<Function*> funcs;
 
     Program(Span span, std::string name, std::vector<Function*> funcs)
-        : ASTNode(span, ASTNodeKind::Program), name(std::move(name)), funcs(std::move(funcs)) {}
+        : Node(span, NodeKind::Program), name(std::move(name)), funcs(std::move(funcs)) {}
 
     std::string repr() const override;
 };
 
-struct NumberLiteral : public ASTNode {
+struct NumberLiteral : public Node {
     int value;
 
     NumberLiteral(Span span, int value)
-        : ASTNode(span, ASTNodeKind::NumberLiteral), value(value) {}
+        : Node(span, NodeKind::NumberLiteral), value(value) {}
 
     std::string repr() const override;
 };
 
-struct Identifier : public ASTNode {
+struct Identifier : public Node {
     std::string name;
 
     Identifier(Span span, std::string name)
-        : ASTNode(span, ASTNodeKind::Identifier), name(std::move(name)) {}
+        : Node(span, NodeKind::Identifier), name(std::move(name)) {}
 
     std::string repr() const override;
 };
 
-struct Return : public ASTNode {
-    ASTNode* value;
+struct Return : public Node {
+    Node* value;
 
-    Return(Span span, ASTNode* value)
-        : ASTNode(span, ASTNodeKind::Return), value(value) {}
+    Return(Span span, Node* value)
+        : Node(span, NodeKind::Return), value(value) {}
 
     std::string repr() const override;
 };

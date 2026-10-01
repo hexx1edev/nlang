@@ -8,10 +8,12 @@ std::string Type::repr() const {
 }
 
 std::string Function::repr() const {
-    std::string result = std::format("Function(name={}, return_type={}, body=[\n", name, return_type->repr());
+    std::string result = std::format("Function(name={}, return_type={}, body=[", name, return_type->repr());
 
     for (auto* node : body) {
-        result += std::format("    {}\n", node->repr());
+        result += node->repr();
+        if (node != body.back())
+            result += ", ";
     }
 
     result += "])";
@@ -20,10 +22,12 @@ std::string Function::repr() const {
 }
 
 std::string Program::repr() const {
-    std::string result = std::format("Program(name={}, funcs=[\n", name);
+    std::string result = std::format("Program(name={}, funcs=[", name);
 
     for (auto* node : funcs) {
-        result += std::format("    {}\n", node->repr());
+        result += node->repr();
+        if (node != funcs.back())
+            result += ", ";
     }
 
     result += "])";
