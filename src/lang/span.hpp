@@ -1,5 +1,5 @@
-#ifndef NSCRIPT_SPAN_HPP
-#define NSCRIPT_SPAN_HPP
+#ifndef NLANG_SPAN_HPP
+#define NLANG_SPAN_HPP
 
 #include <string>
 

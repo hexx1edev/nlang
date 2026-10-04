@@ -1,5 +1,5 @@
-#ifndef NSCRIPT_COLOR_HPP
-#define NSCRIPT_COLOR_HPP
+#ifndef NLANG_COLOR_HPP
+#define NLANG_COLOR_HPP
 
 namespace color {
     constexpr const char* reset  = "\033[0m";

@@ -4,7 +4,7 @@
 namespace AST {
 
 std::string Type::repr() const {
-    return std::format("Type({})", type);
+    return std::format("Type({})", name);
 }
 
 std::string Function::repr() const {

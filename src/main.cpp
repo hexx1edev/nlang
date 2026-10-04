@@ -1,7 +1,11 @@
+#include "backend/irgenerator.hpp"
 #include "lang/ast.hpp"
 #include "lang/parser.hpp"
 #include "lang/semantic.hpp"
 #include "util/diagnostic.hpp"
+#include <backend/compiler.hpp>
+#include "llvm/IR/Module.h"
+#include <llvm/Support/raw_ostream.h>
 #include <sstream>
 #include <util/error.hpp>
 #include <lang/tokenizer.hpp>
@@ -9,8 +13,8 @@
 #include <fstream>
 
 int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        error() << "no file specified";
+    if (argc != 3) {
+        error() << "usage: " << argv[0] << " <input file> <output file>";
         return 1;
     }
 
@@ -63,7 +67,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::cout << prog->repr();
+    IRGenerator gen(prog);
+
+    llvm::Module& mod = gen.generate();
+
+    if (!compile(mod, argv[2])) return 1;
 
     return 0;
 }

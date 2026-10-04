@@ -1,7 +1,8 @@
-#ifndef NSCRIPT_AST_HPP
-#define NSCRIPT_AST_HPP
+#ifndef NLANG_AST_HPP
+#define NLANG_AST_HPP
 
 #include <lang/span.hpp>
+#include <lang/types.hpp>
 #include <vector>
 
 namespace AST {
@@ -27,11 +28,12 @@ struct Node {
 };
 
 struct Type : public Node {
-    std::string type;
+    std::string name;
+    types::Type type;
 
     Type(Span span, std::string type)
         : Node(span, NodeKind::Type),
-            type(std::move(type)) {}
+            name(std::move(type)) {}
 
     std::string repr() const override;
 };

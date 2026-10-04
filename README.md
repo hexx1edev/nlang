@@ -1,25 +1,30 @@
-# NScript
+# nLang
 
-NScript is a simple C-like compiled programming language, that was designed to be a better and mixed version of C, C++ and Rust while keeping simplicity and beginner-friendly syntax.
+nLang is a simple C-like compiled programming language, that was designed to be a better and mixed version of C, C++ and Rust while keeping simplicity and beginner-friendly syntax.
 
 The language's compiler is currently written in C++, but after first release I'll start working on rewriting it to itself.  
 It uses LLVM as a compilation backend.
 
 ## Building
 
-Install `cmake, C++ compiler`, run `cmake -S . -B build` and `cmake --build build`.
+Install `cmake, C++ compiler, vcpkg`, run `vcpkg install --clean-buildtrees-after-build` to install LLVM.  
+> [!NOTE]
+> This will take some time and disk space because LLVM is a big library.
+
+Run `cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE="<your vcpkg root>/scripts/buildsystems/vcpkg.cmake"` to bootstrap project,  
+run `cmake --build build` to build project.
 
 ## Usage
 
-Run `./build/nscript <path/to/file.ns>` to compile a program into an AST.
+Run `./build/nlang <path/to/file.ns>` to compile a program into an AST.
 
 You can test some examples from `examples` directory and see the AST.
 
 ## Features
 
-These are features of nscript:
+These are features of nLang:
 
-- [ ] Type inference
+- [x] Type inference
 - [x] Rust-like easy to read syntax
 - [x] (WIP) Full C compatibility
 - [ ] Ligthweight RTTI
@@ -28,8 +33,8 @@ These are features of nscript:
 These are language things:
 
 - [x] Comments
-- [ ] Functions
-- [ ] Return
+- [x] Functions
+- [x] Return
 - [ ] Let definitions
 - [ ] Constants
 - [ ] Numeric types

@@ -1,5 +1,5 @@
-#ifndef NSCRIPT_PARSER_HPP
-#define NSCRIPT_PARSER_HPP
+#ifndef NLANG_PARSER_HPP
+#define NLANG_PARSER_HPP
 
 #include <exception>
 #include <lang/tokenizer.hpp>

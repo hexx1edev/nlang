@@ -1,5 +1,5 @@
-#ifndef NSCRIPT_ERROR_HPP
-#define NSCRIPT_ERROR_HPP
+#ifndef NLANG_ERROR_HPP
+#define NLANG_ERROR_HPP
 
 #include <iostream>
 #include <sstream>

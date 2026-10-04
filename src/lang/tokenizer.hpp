@@ -1,5 +1,5 @@
-#ifndef NSCRIPT_TOKENIZER_HPP
-#define NSCRIPT_TOKENIZER_HPP
+#ifndef NLANG_TOKENIZER_HPP
+#define NLANG_TOKENIZER_HPP
 
 #include <exception>
 #include <string>

@@ -2,16 +2,16 @@
 #include <lang/ast.hpp>
 #include <format>
 
-bool is_builtin(Type type) {
-    return BUILTIN.contains(type.name);
+bool is_builtin(types::Type type) {
+    return types::BUILTIN.contains(type.name);
 }
 
 bool is_builtin(std::string& name) {
-    return BUILTIN.contains(name);
+    return types::BUILTIN.contains(name);
 }
 
-constexpr bool is_void(Type type) {
-    return type == VOID;
+constexpr bool is_void(types::Type type) {
+    return type.kind == types::TypeKind::VOID;
 }
 
 Analyzer::Analyzer(AST::Program* program) : program(program), current(nullptr) {}
@@ -41,7 +41,7 @@ void Analyzer::declare_functions(AST::Program* program) {
             continue;
         }
 
-        Type return_type = resolve_type(func->return_type);
+        types::Type return_type = resolve_type(func->return_type);
 
         Signature sig;
         sig.name = func->name;
@@ -76,14 +76,14 @@ void Analyzer::check_statement(AST::Node* node) {
 }
 
 void Analyzer::check_return(AST::Return* node) {
-    Type expected = current->return_type;
+    types::Type expected = current->return_type;
     if (node->value == nullptr) {
         if (!is_void(expected))
             error(std::format("expected to return `{}`, got void", expected.name), node->span);
         return;
     }
 
-    Type actual = check_expression(node->value);
+    types::Type actual = check_expression(node->value);
     if (is_void(expected)) {
         error(std::format("expected to return void, got `{}`", actual.name), node->value->span);
         return;
@@ -92,26 +92,28 @@ void Analyzer::check_return(AST::Return* node) {
     match(node->value, expected, actual);
 }
 
-Type Analyzer::check_expression(AST::Node* node) {
+types::Type Analyzer::check_expression(AST::Node* node) {
     if (node->kind != AST::NodeKind::NumberLiteral) {
         error("fuck you", node->span);
-        return ERROR;
+        return types::ERROR;
     }
 
-    return I32;
+    return types::I32;
 }
 
-Type Analyzer::resolve_type(AST::Type* type) {
-    std::string name = type->type;
+types::Type Analyzer::resolve_type(AST::Type* node) {
+    std::string name = node->name;
     if (is_builtin(name)) {
-        return BUILTIN.at(name);
+        types::Type type = types::BUILTIN.at(name);
+        node->type = type;
+        return type;
     }
-    error(std::format("unknown type `{}`", name), type->span);
-    return ERROR;
+    error(std::format("unknown type `{}`", name), node->span);
+    return types::ERROR;
 }
 
-void Analyzer::match(AST::Node* node, Type expected, Type actual) {
-    if (expected == ERROR || actual == ERROR)
+void Analyzer::match(AST::Node* node, types::Type expected, types::Type actual) {
+    if (expected == types::ERROR || actual == types::ERROR)
         return;
     if (expected != actual) {
         error(std::format("expected `{}`, got `{}`", expected.name, actual.name), node->span);

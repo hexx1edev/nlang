@@ -1,5 +1,5 @@
-#ifndef NSCRIPT_DIAGNOSTIC_HPP
-#define NSCRIPT_DIAGNOSTIC_HPP
+#ifndef NLANG_DIAGNOSTIC_HPP
+#define NLANG_DIAGNOSTIC_HPP
 
 #include <string>
 #include <lang/span.hpp>
